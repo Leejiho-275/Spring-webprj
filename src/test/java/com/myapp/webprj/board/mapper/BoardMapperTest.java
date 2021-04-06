@@ -50,4 +50,28 @@ class BoardMapperTest {
         // then
         assertTrue(mapper.getList().get(0).getBno() == 6);
     }
+
+    @Test
+    @DisplayName("글내용, 글제목, 작성자를 수정할 수 있어야 한다")
+    void updateTest() {
+
+        Board newBoard = new Board();
+        newBoard.setBno(5L);
+        newBoard.setTitle("update title");
+        newBoard.setContent("update content");
+        newBoard.setWriter("update writer");
+
+        int resultNum = mapper.update(newBoard);
+        assertTrue(resultNum == 1);
+        assertTrue(mapper.findByBno(5L).getWriter().equals("update writer"));
+    }
+
+    @Test
+    @DisplayName("글 번호를 전달하면 해당 글 정보가 삭제되어야 한다.")
+    void deleteTest() {
+
+        mapper.delete(4L);
+
+        assertNull(mapper.findByBno(4L));
+    }
 }
