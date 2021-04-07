@@ -21,44 +21,46 @@
       <!-- /.panel-heading -->
       <div class="panel-body">
 
-      <form role="form" action="/board/modify" method="post">
+        <form role="form" action="/board/modify" method="post">
 
-        <div class="form-group">
-          <label>Bno</label>
-          <input class="form-control" name='bno' value='${board.bno}' readonly>
-        </div>
+          <div class="form-group">
+            <label>Bno</label>
+            <input class="form-control" name='bno' value='${board.bno}' readonly>
+          </div>
 
-        <div class="form-group">
-          <label>Title</label>
-          <input class="form-control" name='title' value='${board.title}'>
-        </div>
+          <div class="form-group">
+            <label>Title</label>
+            <input class="form-control" name='title' value='${board.title}'>
+          </div>
 
-        <div class="form-group">
-          <label>Text area</label>
-          <textarea class="form-control" rows="5" name='content' >${board.content}</textarea>
-        </div>
+          <div class="form-group">
+            <label>Text area</label>
+            <textarea class="form-control" rows="5" name='content'>${board.content}</textarea>
+          </div>
 
-        <div class="form-group">
-          <label>Writer</label>
-          <input class="form-control" name='writer' value='${board.writer}' readonly>
-        </div>
+          <div class="form-group">
+            <label>Writer</label>
+            <input class="form-control" name='writer' value='${board.writer}' readonly>
+          </div>
 
-        <div class="form-group">
-          <label>RegDate</label>
-          <input class="form-control" name='regDate' value='<fmt:formatDate pattern = "yyyy/MM/dd" value = "${board.regDate}" />'  readonly>
-        </div>
+          <div class="form-group">
+            <label>RegDate</label>
+            <input class="form-control" name='regDate'
+              value='<fmt:formatDate pattern = "yyyy/MM/dd" value = "${board.regDate}" />' readonly>
+          </div>
 
-        <div class="form-group">
-          <label>Update Date</label>
-          <input class="form-control" name='updateDate' value='<fmt:formatDate pattern = "yyyy/MM/dd" value = "${board.updateDate}" />'  readonly>
-        </div>
+          <div class="form-group">
+            <label>Update Date</label>
+            <input class="form-control" name='updateDate'
+              value='<fmt:formatDate pattern = "yyyy/MM/dd" value = "${board.updateDate}" />' readonly>
+          </div>
 
 
 
           <div class="btn-group">
-              <button type="submit" data-oper='modify' class="btn btn-default">Modify</button>
-              <button type="button" data-oper='remove' class="btn btn-danger">Remove</button>
-              <button type="button" data-oper='list' class="btn btn-info">List</button>
+            <button type="submit" data-oper='modify' class="btn btn-default">Modify</button>
+            <button type="button" data-oper='remove' class="btn btn-danger">Remove</button>
+            <button type="button" data-oper='list' class="btn btn-info">List</button>
           </div>
         </form>
 
@@ -72,5 +74,27 @@
   <!-- end panel -->
 </div>
 <!-- /.row -->
+
+<script>
+  document.querySelector('.btn-group').addEventListener('click', e => {
+    e.preventDefault(); // submit 기능 중지 (서버로 전송 기능)
+
+    const oper = e.target.dataset.oper;
+
+    const $actionForm = document.querySelector('form[role=form]');
+
+    if (oper === 'list') {
+      // form의 action을 /board/list로 변경, method를 get으로 변경
+      $actionForm.setAttribute('action','/board/list');
+      $actionForm.setAttribute('method','get');
+    } else if (oper === 'remove') {
+      // form의 action을 /board/remove로 변경
+      $actionForm.setAttribute('action','/board/remove');
+    }
+    // form을 submit
+    $actionForm.submit();
+
+  })
+</script>
 
 <%@include file="../includes/footer.jsp"%>

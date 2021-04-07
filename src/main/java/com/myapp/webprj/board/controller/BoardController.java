@@ -2,6 +2,8 @@ package com.myapp.webprj.board.controller;
 
 import com.myapp.webprj.board.domain.Board;
 import com.myapp.webprj.board.service.BoardService;
+import com.myapp.webprj.common.Criteria;
+import com.myapp.webprj.common.PageMaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -23,10 +25,11 @@ public class BoardController {
 
     // 게시물 목록 요청 처리
     @GetMapping("/list")
-    public String list(Model model) {
-        log.info("/board/list GET요청 발생");
-        List<Board> list = boardService.getList();
+    public String list(Criteria cri, Model model) {
+        log.info("/board/list GET요청 발생 : " + cri);
+        List<Board> list = boardService.getList(cri);
         model.addAttribute("list", list);
+        model.addAttribute("pageInfo", new PageMaker(cri, boardService.getTotal()));
         return "board/list";
     }
 
@@ -49,7 +52,7 @@ public class BoardController {
     // 게시글 상세조회 요청
     @GetMapping("/get")
     public String get(Long bno, Model model) {
-        log.info("/board/get GET요청" + bno);
+        log.info("/board/get GET요청 : " + bno);
 
         Board board = boardService.get(bno);
         model.addAttribute("board", board);
@@ -59,7 +62,7 @@ public class BoardController {
     // 게시글 수정 요청 GET
     @GetMapping("/modify")
     public String modify(Long bno, Model model) {
-        log.info("/board/modify GET요청" + bno);
+        log.info("/board/modify GET요청 : " + bno);
 
         Board board = boardService.get(bno);
         model.addAttribute("board", board);
@@ -69,10 +72,21 @@ public class BoardController {
     // 게시글 수정 요청 POST
     @PostMapping("/modify")
     public String modify(Board board, RedirectAttributes ra) {
-        log.info("/board/modify POST요청" + board);
+        log.info("/board/modify POST요청 : " + board);
         boolean modify = boardService.modify(board);
         if (modify) {
             ra.addFlashAttribute("msg", "modSuccess");
+        }
+        return "redirect:/board/list";
+    }
+
+    // 게시글 삭제 요청 POST
+    @PostMapping("/remove")
+    public String remove(Long bno, RedirectAttributes ra) {
+        log.info("/board/remove POST요청 : " + bno);
+        boolean remove = boardService.remove(bno);
+        if (remove) {
+            ra.addFlashAttribute("msg", "delSuccess");
         }
         return "redirect:/board/list";
     }
