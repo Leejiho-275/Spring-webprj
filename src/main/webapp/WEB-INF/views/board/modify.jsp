@@ -55,7 +55,10 @@
               value='<fmt:formatDate pattern = "yyyy/MM/dd" value = "${board.updateDate}" />' readonly>
           </div>
 
-
+          <!-- form에서 다른 URL로 파라미터를 넘기려면 name속성을 활용해야 함 -->
+          <input type="hidden" name="page" value="${pageInfo.page}">
+          <input type="hidden" name="type" value="${pageInfo.type}">
+          <input type="hidden" name="keyword" value="${pageInfo.keyword}">
 
           <div class="btn-group">
             <button type="submit" data-oper='modify' class="btn btn-default">Modify</button>
@@ -85,11 +88,11 @@
 
     if (oper === 'list') {
       // form의 action을 /board/list로 변경, method를 get으로 변경
-      $actionForm.setAttribute('action','/board/list');
-      $actionForm.setAttribute('method','get');
+      $actionForm.setAttribute('action', '/board/list');
+      $actionForm.setAttribute('method', 'get');
     } else if (oper === 'remove') {
       // form의 action을 /board/remove로 변경
-      $actionForm.setAttribute('action','/board/remove');
+      $actionForm.setAttribute('action', '/board/remove');
     }
     // form을 submit
     $actionForm.submit();
