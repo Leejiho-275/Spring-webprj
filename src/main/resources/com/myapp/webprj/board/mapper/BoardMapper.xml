@@ -10,6 +10,7 @@
     <resultMap id="boardMap" type="com.myapp.webprj.board.domain.Board">
         <result property="regDate" column="regdate"/>
         <result property="updateDate" column="updatedate"/>
+        <result property="replyCnt" column="reply_cnt"/>
     </resultMap>
 
     <select id="getList" resultMap="boardMap">
@@ -37,11 +38,11 @@
 
     <select id="getTotalCount" resultType="int">
         SELECT
-            COUNT(*)
+        COUNT(*)
         FROM tbl_free_board
     </select>
 
-<!--    제목으로 검색     -->
+    <!--    제목으로 검색     -->
     <select id="getListByTitle" resultMap="boardMap">
         <![CDATA[
           select
@@ -68,22 +69,22 @@
         WHERE title like '%' || #{keyword} || '%'
     </select>
 
-<!--    목록 조회 통합       -->
+    <!--    목록 조회 통합       -->
     <select id="getSearchList" resultMap="boardMap">
         <![CDATA[
           select
-            bno, title, content, writer, regdate, updatedate
+            bno, title, content, writer, regdate, updatedate, reply_cnt
           from
               (
               select /*+INDEX_DESC(tbl_free_board pk_free_board) */
-                rownum rn, bno, title, content, writer, regdate, updatedate
+                rownum rn, bno, title, content, writer, regdate, updatedate, reply_cnt
               from
                 tbl_free_board
               where
         ]]>
-                <if test="type=='title'">
-                title like '%' || #{keyword} || '%' AND
-                </if>
+        <if test="type=='title'">
+            title like '%' || #{keyword} || '%' AND
+        </if>
         <if test="type=='content'">
             content like '%' || #{keyword} || '%' AND
         </if>
@@ -116,8 +117,8 @@
             WHERE writer like '%' || #{keyword} || '%'
         </if>
         <if test="type=='titleContent'">
-        WHERE (title like '%' || #{keyword} || '%'
-        OR content like '%' || #{keyword} || '%')
+            WHERE (title like '%' || #{keyword} || '%'
+            OR content like '%' || #{keyword} || '%')
         </if>
     </select>
 
@@ -146,5 +147,12 @@
         DELETE FROM tbl_free_board
         WHERE bno = #{bno}
     </delete>
+
+<!--    댓글 수 증가   -->
+    <update id="increaseReplyCount">
+        UPDATE tbl_free_board
+        SET reply_cnt = (SELECT COUNT(*) FROM tbl_reply WHERE bno = #{bno})
+        WHERE bno = #{bno}
+    </update>
 
 </mapper>

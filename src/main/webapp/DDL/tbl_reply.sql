@@ -17,3 +17,7 @@ alter table tbl_reply
 add constraint fk_reply_free_board
 foreign key (bno)
 REFERENCES tbl_free_board (bno);
+
+-- tbl_free_board 댓글 수 컬럼 추가
+ALTER table tbl_free_board
+add reply_cnt number(10) default 0;
