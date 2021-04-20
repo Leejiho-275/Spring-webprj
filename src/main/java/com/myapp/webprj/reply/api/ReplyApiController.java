@@ -52,14 +52,31 @@ public class ReplyApiController {
     }
 
     // 댓글 수정
-    @PutMapping("/{rno}")
-    public ResponseEntity<Reply> modify(@RequestBody Reply reply){
-        log.info("/api/v1/replies/ PUT : " + reply);
+//    @PutMapping("/{rno}")@PatchMapping("/{rno}")
+    @RequestMapping(value = "/{rno}", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<String> modify(@RequestBody Reply reply, @PathVariable Long rno) {
+
+        reply.setRno(rno);
+
+        log.info("/api/v1/replies/" + rno + " PUT : " + reply);
 
         int count = replyService.modify(reply);
 
-        return count == 1 ? new ResponseEntity<>(replyService.get(reply.getRno()), HttpStatus.OK)
+        return count == 1 ? new ResponseEntity<>("modSuccess", HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // 댓글 삭제
+    @DeleteMapping("/{bno}/{rno}")
+    public ResponseEntity<String> remove(@PathVariable Long bno, @PathVariable Long rno) {
+
+        log.info("/api.v1/replies/" + bno + "/" + rno + " DELETE");
+
+        int count = replyService.remove(bno, rno);
+
+        return count == 1 ? new ResponseEntity<>("delSuccess", HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 
 }
