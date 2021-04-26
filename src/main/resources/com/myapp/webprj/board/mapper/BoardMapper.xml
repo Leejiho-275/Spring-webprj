@@ -133,6 +133,20 @@
         VALUES (seq_free_board.nextval, #{title}, #{content}, #{writer})
     </insert>
 
+    <!--    파일 첨부 처리   -->
+    <insert id="addFile">
+        INSERT INTO file_upload
+        (file_name, bno)
+        VALUES (#{fileName}, SEQ_FREE_BOARD.currval)
+    </insert>
+
+    <!--  파일명 조회  -->
+    <select id="findFileNames" resultType="string">
+        SELECT file_name
+        FROM file_upload
+        WHERE bno = #{bno}
+    </select>
+
     <update id="update">
         UPDATE tbl_free_board
         SET
@@ -148,7 +162,7 @@
         WHERE bno = #{bno}
     </delete>
 
-<!--    댓글 수 증가   -->
+    <!--    댓글 수 증가   -->
     <update id="increaseReplyCount">
         UPDATE tbl_free_board
         SET reply_cnt = (SELECT COUNT(*) FROM tbl_reply WHERE bno = #{bno})
