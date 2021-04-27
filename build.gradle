@@ -28,6 +28,10 @@ dependencies {
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	// 스프링 시큐리티 라이브러리
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-test'
+
 	// 오라클 라이브러리 (11g edition - gradle, maven 라이센스 문제 공식 지원 불가)
 	compile fileTree(dir: '/src/main/webapp/WEB-INF/lib', include: ['*.jar'])
 
